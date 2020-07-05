@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>雾霾探测系统</title>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+		<!--页面每1秒刷新一次  <meta http-equiv="Refresh" content="1";/>  -->
+		<link rel="stylesheet" type="text/css" href="../css/style.css">
+	</head>
+	<body>
+		<div id = "header", th:text="'您当前的位置：' +  ${weather.getLocation()} + '  时间：' + ${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} "></div>
+		<div id = "aw">
+			<div id = "air">
+				<h1>空气质量</h1>
+				<ul class="ul">
+				   <li th:text="'空气污染指数=' + ${air.getAqi()}"></li>
+				   <li th:text="'主要污染物=' + ${air.getMain()}"></li>
+				   <li th:text="'空气质量=' + ${air.getQlty()}"></li>
+				   <li th:text="'pm10含量=' + ${air.getPm10()}"></li>
+				   <li th:text="'pm25含量=' + ${air.getPm25()}"></li>
+				   <li th:text="'二氧化氮含量=' + ${air.getNo2()}"></li>
+				   <li th:text="'二氧化硫含量=' + ${air.getSo2()}"></li>
+				   <li th:text="'一氧化碳含量=' + ${air.getCo()}"></li>
+				   <li th:text="'臭氧含量=' + ${air.getO3()}"></li>
+				</ul>
+			</div>
+			<div id = "weather">
+				<h1>天气情况</h1>
+				<img id = "img", th:src="@{'../img/' + ${weather.getCond_code()} + '.png'}"/>
+				
+				<ul class="ul">
+				   <li th:text="'体感温度=' + ${weather.getFl()}"></li>
+				   <li th:text="'风向角度=' + ${weather.getWind_deg()}"></li>
+				   <li th:text="'风向=' + ${weather.getWind_dir()}"></li>
+				   <li th:text="'风力=' + ${weather.getWind_sc()}"></li>
+				   <li th:text="'风速=' + ${weather.getWind_spd()}"></li>
+				   <li th:text="'降水量=' + ${weather.getPcpn()}"></li>
+				   <li th:text="'大气压强=' + ${weather.getPres()}"></li>
+				   <li th:text="'能见度=' + ${weather.getVis()}"></li>
+				   <li th:text="'云量=' + ${weather.getCloud()}"></li>
+				</ul>
+			</div>
+		</div>
+		<div id = "diagram">
+			<canvas id="cv">你的设备不支持图表数据显示</canvas>
+		</div>
+		<div id = "footer">天气数据来源：和风天气</div>
+		
+		
+		<script th:inline="javascript">
+
+		 (function(){
+	        window.onload = function(){
+	          //数据源
+			
+			var dia = document.getElementById("diagram");
+			
+			var hum0 = [[${history.get(0).getHum()}]];
+			var tmp0 = [[${history.get(0).getTmp()}]];
+			var date0 = [[${history.get(0).getStringDate()}]];	
+			
+			var hum1 = [[${history.get(1).getHum()}]];
+			var tmp1 = [[${history.get(1).getTmp()}]];
+			var date1 = [[${history.get(1).getStringDate()}]];	
+			
+			var hum2 = [[${history.get(2).getHum()}]];
+			var tmp2 = [[${history.get(2).getTmp()}]];
+			var date2 = [[${history.get(2).getStringDate()}]];	
+			
+			var hum3 = [[${history.get(3).getHum()}]];
+			var tmp3 = [[${history.get(3).getTmp()}]];
+			var date3 = [[${history.get(3).getStringDate()}]];	
+			
+			var hum4 = [[${history.get(4).getHum()}]];
+			var tmp4 = [[${history.get(4).getTmp()}]];
+			var date4 = [[${history.get(4).getStringDate()}]];	
+			
+			var hum5 = [[${history.get(5).getHum()}]];
+			var tmp5 = [[${history.get(5).getTmp()}]];
+			var date5 = [[${history.get(5).getStringDate()}]];	
+			
+			var hum6 = [[${history.get(6).getHum()}]];
+			var tmp6 = [[${history.get(6).getTmp()}]];
+			var date6 = [[${history.get(6).getStringDate()}]];	
+			var dict1 = [
+	            {x: date0, y: hum0},
+	            {x: date1, y: hum1},
+	            {x: date2, y: hum2},
+	            {x: date3, y: hum3},
+	            {x: date4, y: hum4},
+	            {x: date5, y: hum5},
+	            {x: date6, y: hum6},
+	
+	          ]
+			var dict2 = [
+	            {x: date0, y: tmp0},
+	            {x: date1, y: tmp1},
+	            {x: date2, y: tmp2},
+	            {x: date3, y: tmp3},
+	            {x: date4, y: tmp4},
+	            {x: date5, y: tmp5},
+	            {x: date6, y: tmp6},
+	          ]
+
+	          //数据源提取
+	          var len = dict1.length;
+	          var xArr = [], yArr1 = [], tmp_yArr1 = [], yArr2 = [], tmp_yArr2 = [];
+	          for(var i=0; i<len; i++){
+	            xArr.push(i * 43);
+	            tmp_yArr1.push(dict1[i].y);
+			    tmp_yArr2.push(dict2[i].y);
+	          }
+	          var tmp_minY1 = Math.min.apply(Math, tmp_yArr1);//最小值
+	          var tmp_maxY1 = Math.max.apply(Math, tmp_yArr1);//最大值
+			  var tmp_minY2 = Math.min.apply(Math, tmp_yArr2);//最小值
+	          var tmp_maxY2 = Math.max.apply(Math, tmp_yArr2);//最大值
+		      var tmp_minY = tmp_minY2;
+			  if(tmp_minY1 < tmp_minY2){
+				var tmp_minY = tmp_minY1;
+			  }
+			  var tmp_maxY = tmp_maxY2;
+			  if(tmp_maxY1 > tmp_maxY2){
+				var tmp_maxY = tmp_maxY1;
+			  }
+	          
+	            for(var i=0; i<len; i++){
+	              yArr1.push(tmp_yArr1[i] - tmp_minY + 20);//与最小的做比较
+				  yArr2.push(tmp_yArr2[i] - tmp_minY + 20);//与最小的做比较
+	            }
+	         
+			 
+	          var minY1 = Math.min.apply(Math, yArr1);
+	          var maxY1 = Math.max.apply(Math, yArr1);
+			  var minY2 = Math.min.apply(Math, yArr2);
+	          var maxY2 = Math.max.apply(Math, yArr2);
+			  var minY = minY2;
+			  if(minY1 < minY2){
+				var minY = minY1;
+			  }
+			  var maxY = maxY2;
+			  if(maxY1 > maxY2){
+				var maxY = maxY1;
+			  }
+	
+	
+	          //canvas 准备
+	          var canvas = document.getElementById("cv");//获取canvas画布
+	          var ctx1 = canvas.getContext("2d");
+				
+			  ctx1.beginPath();
+              ctx1.moveTo(0, 0);
+       		  ctx1.lineTo(0, canvas.height - 20);
+      		  ctx1.stroke();
+       		  ctx1.moveTo(0, canvas.height - 20);
+        	  ctx1.lineTo(500, canvas.height - 20);
+      		  ctx1.stroke();
+      		  
+	
+	
+	          //画折线
+	          for(var i=0 ;i<len; i++){
+	            var x = xArr[i];
+	            var y1 = maxY - yArr1[i] + minY;
+	            if(i === 0){
+	              ctx1 .moveTo(x, y1);
+	            }
+	            else{
+	              ctx1 .lineTo(x, y1);
+	            }
+	          }
+	          ctx1 .stroke();
+	          
+			  var ctx2 = canvas.getContext("2d");
+			  for(var i=0 ;i<len; i++){
+	            var x = xArr[i];
+				var y2 = maxY - yArr2[i] + minY;
+	            if(i === 0){
+				  ctx2 .moveTo(x, y2);
+	            }
+	            else{
+				  ctx2 .lineTo(x, y2);
+	            }
+	          }
+			  ctx2 .stroke();
+	          //画点
+	          for(var i=0; i<len; i++){
+	            var x = xArr[i];
+	            var y1 = maxY - yArr1[i] + minY;
+			    var y2 = maxY - yArr2[i] + minY;
+	            var xMemo = dict1[i].x;
+	            var yMemo1 = "湿度" + dict1[i].y;
+				var yMemo2 = "温度" + dict2[i].y;
+	            ctx1.beginPath();
+	            ctx1.fillStyle = "#0f0";
+	            ctx1.arc(x, y1, 2, 0, 2*Math.PI);//画点
+	            ctx1.fill();
+	            ctx1.fillText(yMemo1, x + 3, y1 - 10);
+				ctx1.fillStyle = "#000";
+	            ctx1.fillText(xMemo, x + 3, canvas.height - 10, 40);//画文字
+				
+				ctx2.beginPath();
+	            ctx2.fillStyle = "#f00";
+				ctx2.arc(x, y2, 2, 0, 2*Math.PI);//画点
+	            ctx2.fill();
+				ctx2.fillText(yMemo2, x + 3, y2 - 10);
+	          }
+	        }
+	      })();
+    </script>
+	</body>
+</html>

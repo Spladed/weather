@@ -1,0 +1,56 @@
+#air, #weather{
+    width:50%;
+    height:400px;
+    text-align:center;
+    border-style:solid;
+    border-color:gray;
+    box-sizing: border-box;
+}
+
+#air{
+	float:left;
+	border-right-style:none;
+	
+}
+
+#weather{
+	float:right;
+}
+
+#header{
+	height:100px;
+	border-style:solid;
+    border-color:gray;
+    box-sizing: border-box;
+	border-bottom-style:none;
+	padding-top:30px;
+	padding-bottom:30px;
+}
+#footer{
+    text-align:center;
+	float:bottom;
+	height:50px;
+	border-style:solid;
+    border-color:gray;
+    box-sizing: border-box;
+	border-top-style:none; 
+}
+
+.ul{
+	list-style-type:none;
+}
+
+#diagram{
+	min-height:1000px;
+	border-style:solid;
+    border-color:gray;
+    box-sizing: border-box;
+}
+
+#cv{
+    padding-left: 10%;
+    min-height:500px;
+    min-width:1000px;
+    
+}
+
