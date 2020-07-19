@@ -2,18 +2,17 @@ package com.heweather.dao.entity;
 
 import java.sql.Timestamp;
 
-public class CityHistoryWeather {
-	
+public class WeatherHourlyCondition {
 	private String tmp;			//温度
 	private String hum;			//湿度
-	private java.sql.Timestamp record_date;			//数据记录时间
+	private String record_date;			//数据记录时间
 	
-	public CityHistoryWeather() {
+	public WeatherHourlyCondition() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public CityHistoryWeather(String tmp,String hum,Timestamp record_date) {
+	public WeatherHourlyCondition(String tmp,String hum,String record_date) {
 		super();
 		this.record_date=record_date;
 		this.hum=hum;
@@ -23,11 +22,11 @@ public class CityHistoryWeather {
 	public String getTmp() {
 		return tmp;
 	}
-	public java.sql.Timestamp getRecord_date() {
+	public String getRecord_date() {
 		return record_date;
 	}
 
-	public void setRecord_date(java.sql.Timestamp record_date) {
+	public void setRecord_date(String record_date) {
 		this.record_date = record_date;
 	}
 
@@ -42,7 +41,6 @@ public class CityHistoryWeather {
 	}
 	
 	public String getStringDate() {
-		return record_date.toString().split(" ")[0];
+		return record_date.toString().split(" ")[1];
 	}
-
 }

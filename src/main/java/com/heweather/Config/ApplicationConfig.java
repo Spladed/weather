@@ -11,5 +11,6 @@ public class ApplicationConfig {
         dataSource.setUsername("root");
         dataSource.setPassword("niunian052170");
         return dataSource;
-    }   
+    }
+    
 }
